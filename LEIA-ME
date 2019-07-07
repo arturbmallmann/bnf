@@ -1,0 +1,12 @@
+Trabalho final para a disciplina de LFA.
+
+A implementação deste trabalho foi dada em python3,
+para executar a aplicação é necessário que haja esta
+versão instalada em sua máquina.
+
+Para executar o programa basta executar pelo terminal
+python3 bnf.py <arquivo de entrada> ou dar a permissão
+de execucao ao arquivo bnf.py (chmod +x bnf.py) e 
+executar o próprio:
+./bnf.py <arquivo de entrada>
+
