@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+import ler
+import sys
 left=-1
 right=1
 stop=0
@@ -40,52 +42,21 @@ class machine():
         return False if aux=="qsim" or aux=="qnao" else True
 
 def main():
-#    tape=['>','0','0','1','1','0','0']+['_']*10
-    print("insira uma palavra composta por 0s e 1s, separados por ',': ")
-    tape=['>']
-    tape+=input().split(',')
-    tape+=['_']
-    q={     'qsim'      :state('qsim'),
-            'qnao'      :state('qnao'),
-            'q0'        :state('q0'),
-            'qachou0'   :state('qachou0'),
-            'qbusca0'   :state('qbusca0'),
-            'qachou1'   :state('qachou1'),
-            'qbusca1'   :state('qbusca1'),
-            'qvolta'    :state('qvolta')}
+	args=sys.argv
+	inputFile = ler.File(args.pop());
+	print ('Lendo o arquivo %s' % (inputFile.name()))
 
-    q['qvolta'].add_transaction     ('>',   q['q0'],        '>',    right)
-    q['q0'].add_transaction         ('>',   q['q0'],        '>',    right)
-    q['qvolta'].add_transaction     ('0',   q['qvolta'],    '0',    left)
-    q['qvolta'].add_transaction     ('1',   q['qvolta'],    '1',    left)
-
-    q['q0'].add_transaction         ('0',   q['qachou0'],   '>',    right)
-    q['q0'].add_transaction         ('1',   q['qachou1'],   '>',    right)
-    q['q0'].add_transaction         ('_',   q['qsim'],      '_',    stop)
-
-    q['qachou0'].add_transaction    ('0',   q['qachou0'],   '0',    right)
-    q['qachou0'].add_transaction    ('1',   q['qachou0'],   '1',    right)
-    q['qachou0'].add_transaction    ('_',   q['qbusca0'],   '_',    left)
-
-    q['qbusca0'].add_transaction    ('0',   q['qvolta'],    '_',    left)
-    q['qbusca0'].add_transaction    ('1',   q['qnao'],      '0',    stop)
-    q['qbusca0'].add_transaction    ('>',   q['qsim'],      '>',    stop)
-
-    q['qachou1'].add_transaction    ('0',   q['qachou1'],   '0',    right)
-    q['qachou1'].add_transaction    ('1',   q['qachou1'],   '1',    right)
-    q['qachou1'].add_transaction    ('_',   q['qbusca1'],   '_',    left)
-
-    q['qbusca1'].add_transaction    ('1',   q['qvolta'],    '_',    left)
-    q['qbusca1'].add_transaction    ('0',   q['qnao'],      '0',    stop)
-    q['qbusca1'].add_transaction    ('>',   q['qsim'],      '>',    stop)
-    print ('lol')
-    m=machine(q['q0'],q,tape)
-    i=0
-    while(m.is_running()):
-        i+=1
-        print ("Ciclo %d %s\n"% (i,tape))
-        m.compute()
+	while (lambda x : x=inputFile.read()):
+		print(line)
+#    m=machine(q['q0'],q,tape)
+#	i=0
+#    while(m.is_running()):
+#        i+=1
+#        print ("Ciclo %d %s\n"% (i,tape))
+#        m.compute()
     #states[1].add_transaction('>',self,'
 #    states[0].
+
 if __name__=='__main__':
     main()
+
