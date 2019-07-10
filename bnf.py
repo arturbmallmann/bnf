@@ -111,6 +111,7 @@ def main():
 				lang.reset_actual()
 				for char in line:
 					lang.add_exp_next(char)
+				lang.get_state(lang.actual).is_final=True
 #				print("\nafter "%s" exp load:" % (line))
 				lang.print_states()			
 				
@@ -136,13 +137,17 @@ def determinizar(lang):
 				sta = state(newname)
 				lang.add_state(sta)
 				newdict=dict()
-				for x in item:
-					xstat = lang.get_state(x)
-					for xkey in xstat:
-						xitem = xstat.get_valueof(xkey)
-						sta.add_next(xkey,xitem)
-					sta.is_final = sta.is_final or xstat.is_final
-					lang.del_state(xstat)
+				print("item %s" %(item))
+				try:#de algum jeito o is instance as vezes falhas, sei lá pq, try nele...
+					for x in item:
+						xstat = lang.get_state(x)
+						for xkey in xstat:
+							xitem = xstat.get_valueof(xkey)
+							sta.add_next(xkey,xitem)
+						sta.is_final = sta.is_final or xstat.is_final
+						lang.del_state(xstat)
+				except:
+					pass
 #				print(newname)
 
 	return flag
