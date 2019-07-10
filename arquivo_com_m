@@ -1,0 +1,8 @@
+se
+senao
+entao
+
+<S> ::= a<M>|e<M>|i<M>|o<M>|u<M>
+<M> ::= a<M>|e<M>|i<M>|o<M>|u<M>|ε
+
+
