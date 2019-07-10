@@ -39,7 +39,7 @@ class language():
 		for i in self.states:
 			if (i.get_name()==value):
 				return i
-		return None
+		return -1 
 	def del_state(self,value):
 		self.states.remove(value)
 	def __iter__(self):
@@ -81,8 +81,12 @@ def main():
 				splited = line.split("::=")
 				a=splited[0].index('<')
 				b=splited[0].index('>')
-				sta= state((splited[0])[a+1:b].strip())
-				lang.add_state(sta)
+				rule_name=(splited[0])[a+1:b].strip()
+				sta=lang.get_state(rule_name)
+				if (sta == -1):
+					print("criando %s" % (rule_name))
+					sta=state(rule_name)
+					lang.add_state(sta)
 				
 				transitions = splited[1].split('|')
 		#		print ("%s \n %s" % (splited[0],transitions))
@@ -107,7 +111,7 @@ def main():
 				lang.reset_actual()
 				for char in line:
 					lang.add_exp_next(char)
-				print("\nafter "%s" exp load:"%(line))
+#				print("\nafter "%s" exp load:" % (line))
 				lang.print_states()			
 				
 
