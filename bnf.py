@@ -28,6 +28,10 @@ class state():
 class language():
 	def __init__(self):
 		self.states = list() 
+		self.initial = "S"
+		self.add_state(state(self.initial))
+		self.actual = self.initial
+		self.name_counter = ord('A');
 	def add_state(self,state):
 		self.states.append(state)
 
@@ -40,13 +44,19 @@ class language():
 		self.states.remove(value)
 	def __iter__(self):
 		return self.states.__iter__()
-	def compute(self):
-		print("Position: %s Estado: %s" % (self.position,self.astate.get_name()))
-		(self.astate,
-		self.tape[self.position],
-		direction) = self.astate.compute(self.tape[self.position])        
-		self.position+=direction
-		print("Position+1: %s Estado+1: %s" % (self.position, self.astate.get_name()))
+	def add_exp_next(self,simbol):
+		sta=self.get_state(self.actual)
+#		if(sta == None):
+#			sta=state(self.actual)
+#		self.add_state(sta)
+		thenext=chr(self.name_counter)
+		statnext=state(thenext)
+		self.add_state(statnext)
+		sta.add_next(simbol,thenext)
+		self.actual=thenext
+		self.name_counter+=1
+	def reset_actual(self):
+		self.actual=self.initial
 	def is_running(self):
 		aux=self.astate.get_name()
 		return False if aux=="qsim" or aux=="qnao" else True
@@ -67,6 +77,7 @@ def main():
 		if (line==''):
 			pass		
 		else:
+			if (line.find("::=")>0):
 				splited = line.split("::=")
 				a=splited[0].index('<')
 				b=splited[0].index('>')
@@ -91,6 +102,14 @@ def main():
 					if(item=='ε'):
 						sta.is_final=True
 				print (sta.get_dict())
+			else:
+				#carga a partir dos tokens
+				lang.reset_actual()
+				for char in line:
+					lang.add_exp_next(char)
+				print("\nafter "%s" exp load:"%(line))
+				lang.print_states()			
+				
 
 	print ("\nthe states before determinized:")
 	lang.print_states();
