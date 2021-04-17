@@ -1,0 +1,10 @@
+(entradas/saída) [processo]
+
+(fluxo de chars) -> [analisador léxico] ->
+(fluxo de tokens) -> [analisador sintático] ->
+(árvore de sintaxe) -> [analisador semântico] ->
+(árvore de sintaxe) -> [gerador de código intermediário] ->
+(representação intermediária) -> [otimizador de código Independente de máquina] ->
+(representação intermediária) -> [gerador de código] ->
+(código da máquina alvo) -> [otimizador de código dependente de máquina] ->
+(código da máquina)

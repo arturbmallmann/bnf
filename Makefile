@@ -1,11 +1,16 @@
-CC = g++
-CFLAGS = -g -Wall -Wno-deprecated
+CC=g++
+CFLAGS= -c -Wall -lm
 
-main: bnf.o
- $(CC) $(CFLAGS) $< -o $@
+all: bnf
 
+bnf: bnf.o 
+	$(CC) bnf.o -o bnf.exec
 bnf.o: bnf.cpp
- $(CC) $(CFLAGS) -c $<
-
-test: 
-	./main
+	$(CC) $(CFLAGS) bnf.cpp
+test:
+	exec ./bnf.exec arquivo.txt
+debug:
+	CFLAGS=${CFLAGS} -g
+	all	
+clean:
+	rm -rf *.o bnf.exec
