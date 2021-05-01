@@ -3,6 +3,10 @@
 #include <sstream>
 #include <string>
 #include <array>
+
+//sort:
+//#include <functional>
+#include <algorithm>
 struct {
 	char * ID;
 	char * data;
@@ -78,10 +82,7 @@ class State {
 // 			final='*' if i.is_final else ''
 // 			print("%s%s > %s" %(final,i.get_name(),i.get_dict()))
 using namespace std;
-int main(int argc, char ** argv){
-	char * entries = argv[argc-1];
-	std::stringstream buffer;
-    cout<<entries<<'['<<argc<<']'<<endl;
+void bnf(char * f_name){
     ifstream arquivo; // ifstream (ler) ofstream(gravar) fstream(ler e gravar)
  /*   arquivo.open(entries,std::ios::in);
     char aaa[100];
@@ -97,14 +98,66 @@ int main(int argc, char ** argv){
 		}while(!arquivo.eof());
 	}
 	arquivo.close();*/
-	arquivo.open(entries,std::ios::in);
+	arquivo.open(f_name,std::ios::in);
 //	arquivo.seekg(0);
 //	char buff [255];
-	string buff;
+	string line;
 	string inputFile;
-	while (getline(arquivo,buff) ){
-		inputFile += buff +'\n';
-//		cout<<buff<<endl;
+	while (getline(arquivo,line) ){
+//		cout<<"line length:"<<buff.length()<<" last: "<<buff[buff.length()-1]<<endl;
+		while(line[0]==' ')
+			line.erase(0,1);
+		while(line[line.length()-1]==' ')
+			line.erase(line.length()-1,1);
+		int p=0;
+//		cout<<buff.find("  ")<<endl;
+		while( (int) line.find(" ") != -1 ){
+			p = (int) line.find(" ");
+			cout<<"P: "<<p<<endl;
+			line.erase(p,1);
+		}
+		//inputFile += buff +'\n';
+		if (line==""){
+			continue;
+		}
+		cout<<line<<endl;
+		array<char,100> nterm;//nao terminais
+		int i_count=0; 
+		array<char,100> transactions;//transicões
+		char * name; // nome da regra
+//		for (int i=0;i<100;i++)
+//			name[0] = '\n';
+		p=0;
+		if((int)line.find("::=")!=-1){
+			p=line.find("::=") + 3;
+//			name = buff.
+			int beg=(int)line.find('<')+1;
+			int end=(int)line.find('>');
+			name = (char*)malloc(sizeof(char)*end-beg+1);
+			cout<<"beg: "<<beg<<" end: "<<end<<endl;
+			line.copy(name,end-beg,beg);
+			name[end-beg]='\n';
+			cout<<"name: "<<name<<" ..."<<endl;
+			while((int)line.find("<",p+1) != -1){
+				p = line.find("<",p+1);
+				nterm[i_count++]=line[p-1];
+				transactions[i_count++]=line[p+1];
+			}
+		//	sort(inputs.begin(),inputs.end(), std::greater<char>());
+			cout<<"size: "<<nterm.size()<<endl;
+		//	sort(inputs.begin(),inputs.end(), std::greater<char>());
+			sort(nterm.begin(),nterm.begin()+i_count);//), std::less<char>());
+//			sort(inputs.begin(),inputs.begin()+i_count,[](int a, int b) {
+//                return a < b;
+//            });
+		}
+		else{
+			cout<<"tokens\n";
+		}
+		cout<<"chars:\n";
+		for(auto it = nterm.begin(); it != nterm.begin()+i_count;it++)
+			cout<<*it<<" ";
+		cout<<endl;
 	//}
 	//cout<<"Input File:\n"<<inputFile<<endl;
 
@@ -189,6 +242,13 @@ int determinizar(char ** lang){
 // #				print(newname)
 // 
  	return flag;
+}
+using namespace std;
+int main(int argc, char ** argv){
+	char * f_name = argv[argc-1];
+	stringstream buffer;
+    cout<<f_name<<'['<<argc<<']'<<endl;
+    bnf(f_name);
 }
 // #	m=machine(q['q0'],q,tape)
 // #	i=0

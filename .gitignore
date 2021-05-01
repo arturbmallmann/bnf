@@ -1,4 +1,6 @@
 .*.swp
 __pycache__/
 *.exec
+a.out
 *.o
+.project
