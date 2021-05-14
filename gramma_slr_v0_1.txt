@@ -1,0 +1,19 @@
+"Start Symbol" = <master>
+Identifier = {Letter}{AlphaNumeric}*
+num = {Number}+|'-'{Number}+
+<id> ::= Identifier
+<ar> ::= '+' | '-' | or
+<ap> ::= '*' | '/' | '%' | and
+<e> ::= <e> <ar> <t> | <t>
+<t> ::= <t> <ap> <f> | <f>
+<f> ::= '(' <e> ')'| <id> | num 
+<opl> ::= <e> '!=' <e>| <e> '==' <e> | <e> '<' <e> | <e> '>' <e> 
+<cond> ::= <opl> '?' <cod> ':' <cod>
+<attr> ::= <id> '=' <e> | <id> '=' <opl>
+<loop> ::= loop'['<opl>']'<cod>|loop <cod>'['<opl>']'
+<com> ::= <loop> | <cond> | <attr>';'|<function>
+<master> ::= <cod><master>| <cod> |ε
+<cod> ::= '{'<cod_> | <com> |return <opl>';'|return <e>';'
+<cod_> ::= <com><cod_> | '}' | return <opl>';''}'|return <e> ';''}'
+<function> ::= function <id> '('<param> <cod>
+<param> ::= <id>')' |')'| <id>','<param>
