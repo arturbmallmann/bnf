@@ -4,6 +4,7 @@ void write_ts(const char * ident, char * label, int line, TS * ts,int value){
 	entries_t entrie;
 	strcpy(entrie.ident, ident);
 	strcpy(entrie.label, label);
+	entrie.id=ts->qnt_entries;
 	entrie.line = line;
 	entrie.value = value;
 	ts->entries[ts->qnt_entries++] = entrie;
@@ -35,6 +36,8 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		closec = "}";
 		openp = "(";
 		closep = ")";
+		equal = "==";
+		diff = "=";
 		attr = "=";
 		enddot = ";";
 		dot = ".";
@@ -57,6 +60,8 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		closec {write_ts(saved,"}", line, ts,0); goto loop;}
 		openp {write_ts(saved,"(", line, ts,0); goto loop;}
 		closep {write_ts(saved,")", line, ts,0); goto loop;}
+		equal {write_ts(saved,"==", line, ts,0); goto loop;}
+		diff {write_ts(saved,"!=", line, ts,0); goto loop;}
 		attr {write_ts(saved,"=", line, ts,0); goto loop;}
 		enddot {write_ts(saved,";", line, ts,0); goto loop;}
 		dot {write_ts(saved,".", line, ts,0); goto loop;}
@@ -93,11 +98,11 @@ void lex_check(char * file, TS * ts){
 	}
 	fclose(fp);
 	printf("TS entries: %d\n TABLE:\n",ts->qnt_entries);
-	printf("\nlabel\t\tline\t\tvalue\n");
+	printf("\n\tid\tiden\tlabel\t\tline\t\tvalue\n");
 	for (int i=0; i<ts->qnt_entries; i++){
 		entries_t entrie = ts->entries[i];
 		char * str = entrie.label;
-		printf("%s\t\t%s\t\t%d\t\t%d\n",entrie.ident,str,entrie.line,entrie.value);
+		printf("%d\t%s\t\t%s\t\t%d\t\t%d\n",entrie.id,entrie.ident,str,entrie.line,entrie.value);
 		if (strcmp(entrie.label,"ERR")==0)
 			fprintf(stderr,"Erro na linha: %d\nIdentificador: %s\n",entrie.line,entrie.ident);
 		fwrite(str,sizeof(char),strlen(str),of);
@@ -106,6 +111,11 @@ void lex_check(char * file, TS * ts){
 	fwrite("$\n",sizeof(char),2,of);
 	fclose(of);
 	printf("$\n");
+
+	of = fopen("TS.out","w");
+	fwrite(&(ts->qnt_entries),sizeof(int),1,of);
+	fwrite(ts->entries,sizeof(entries_t),ts->qnt_entries,of);
+	fclose(of);
 /*    for (int i = 1; i < argc; ++i) {
         lex(argv[i]);
     }

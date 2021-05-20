@@ -9,6 +9,7 @@
 #define MY_COMPYLER_H_
 
 struct struct_entries{
+	int id;
 	int line;
 	int value;
 	char label[100];
