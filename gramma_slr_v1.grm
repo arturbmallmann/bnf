@@ -10,22 +10,21 @@
 
 <ar> ::= '+' | '-' | OR
 <ap> ::= '*' | '/' | '%' | AND
-<e> ::= <e> <ar> <t> 
+<cp> ::= '!='| '=='| '<' | '>'
+<e> ::= <e> <cp> <r>
+     | <r>
+<r> ::= <r> <ar> <t> 
      | <t>
 <t> ::= <t> <ap> <f> 
      | <f>
 <f> ::= '(' <e> ')'
      | ID 
      | NUM 
-<opl> ::= <e> '!=' <e>
-       | <e> '==' <e>
-       | <e> '<' <e>
-       | <e> '>' <e>
-<cond> ::= IF <opl> <stm> ELSE <stm>
+     
+<cond> ::= IF <e> <stm> ELSE <stm>
 <attr> ::= ID '=' <e>
-        | ID '=' <opl>
-<loop> ::= LOOP'('<opl>')'<stm>
-        |LOOP <stm>'('<opl>')'
+<loop> ::= LOOP'('<e>')'<stm>
+        |LOOP <stm>'('<e>')'
 <com> ::= <loop>
        | <cond>
        | <attr>';'
@@ -35,10 +34,8 @@
        |''
 <stm> ::= '{'<stm_>
        | <com>
-       |RETURN <opl>';'
        |RETURN <e>';'
 <stm_> ::= <com><stm_> | '}'
-        |RETURN <opl>';''}'
         |RETURN <e> ';''}'
 <function> ::= FUNCTION ID '('<param> <stm>
 <param> ::= ID')' |')'
