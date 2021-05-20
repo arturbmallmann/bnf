@@ -8,38 +8,38 @@
 "Case Sensitive" = 'True'
 "Start Symbol" = <lib>
 
-<id> ::= Identifier
-<ar> ::= '+' | '-' | or
-<ap> ::= '*' | '/' | '%' | and
+<ar> ::= '+' | '-' | OR
+<ap> ::= '*' | '/' | '%' | AND
 <e> ::= <e> <ar> <t> 
      | <t>
 <t> ::= <t> <ap> <f> 
      | <f>
 <f> ::= '(' <e> ')'
-     | <id> 
-     | num 
+     | ID 
+     | NUM 
 <opl> ::= <e> '!=' <e>
        | <e> '==' <e>
        | <e> '<' <e>
        | <e> '>' <e>
-<cond> ::= if <opl> <stm> else <stm>
-<attr> ::= <id> '=' <e>
-        | <id> '=' <opl>
-<loop> ::= loop'('<opl>')'<stm>
-        |loop <stm>'('<opl>')'
+<cond> ::= IF <opl> <stm> ELSE <stm>
+<attr> ::= ID '=' <e>
+        | ID '=' <opl>
+<loop> ::= LOOP'('<opl>')'<stm>
+        |LOOP <stm>'('<opl>')'
 <com> ::= <loop>
        | <cond>
        | <attr>';'
        |<function>
 <lib> ::= <function><lib>
+       |<function>
        |''
 <stm> ::= '{'<stm_>
        | <com>
-       |return <opl>';'
-       |return <e>';'
+       |RETURN <opl>';'
+       |RETURN <e>';'
 <stm_> ::= <com><stm_> | '}'
-        | return <opl>';''}'
-        |return <e> ';''}'
-<function> ::= function <id> '('<param> <stm>
-<param> ::= <id>')' |')'
-         | <id>','<param>
+        |RETURN <opl>';''}'
+        |RETURN <e> ';''}'
+<function> ::= FUNCTION ID '('<param> <stm>
+<param> ::= ID')' |')'
+         | ID ',' <param>

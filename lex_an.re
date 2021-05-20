@@ -45,6 +45,7 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
     	[\x00] { return 0; } // qualquer simbolo whitespace sai do loop
 //		null {printf("_");return 0;}
 		function {write_ts(saved,"FUNCTION", line, ts,0); goto loop;}
+		loop {write_ts(saved,"LOOP", line, ts,0); goto loop;}
 		if {write_ts(saved,"IF", line, ts,0); goto loop;}
 		else {write_ts(saved,"ELSE", line, ts,0); goto loop;}
 		printf {write_ts(saved,"PRINTF", line, ts,0); goto loop;}
@@ -52,13 +53,13 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		num {
 			write_ts(saved,"NUM", line, ts,atoi(saved));
 			goto loop;}
-		openc {write_ts(saved,"OPENC", line, ts,0); goto loop;}
-		closec {write_ts(saved,"CLOSEC", line, ts,0); goto loop;}
-		openp {write_ts(saved,"OPENP", line, ts,0); goto loop;}
-		closep {write_ts(saved,"CLOSEP", line, ts,0); goto loop;}
-		attr {write_ts(saved,"ATTR", line, ts,0); goto loop;}
-		enddot {write_ts(saved,"ENDDOT", line, ts,0); goto loop;}
-		dot {write_ts(saved,"ENDDOT", line, ts,0); goto loop;}
+		openc {write_ts(saved,"{", line, ts,0); goto loop;}
+		closec {write_ts(saved,"}", line, ts,0); goto loop;}
+		openp {write_ts(saved,"(", line, ts,0); goto loop;}
+		closep {write_ts(saved,")", line, ts,0); goto loop;}
+		attr {write_ts(saved,"=", line, ts,0); goto loop;}
+		enddot {write_ts(saved,";", line, ts,0); goto loop;}
+		dot {write_ts(saved,".", line, ts,0); goto loop;}
 		str {write_ts(saved,"STR", line, ts,0); goto loop;}
 		err {write_ts(saved,"ERR", line, ts,0); return 0;}
 		* {write_ts(saved,"ERR", line, ts,0); return 0;}
