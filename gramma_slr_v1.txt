@@ -1,0 +1,1615 @@
+﻿============================================================
+GOLD Parser Builder
+Version 5.2.0.
+============================================================
+
+
+========================================
+Terminals
+========================================
+
+0       (EOF)
+ 1      (Error)
+ 2      Whitespace
+ 3      ''
+ 4      '-'
+ 5      '!='
+ 6      '%'
+ 7      '('
+ 8      ')'
+ 9      '*'
+ 10     ','
+ 11     '/'
+ 12     ';'
+ 13     '{'
+ 14     '}'
+ 15     '+'
+ 16     '<'
+ 17     '='
+ 18     '=='
+ 19     '>'
+ 20     AND
+ 21     ELSE
+ 22     FUNCTION
+ 23     ID
+ 24     IF
+ 25     LOOP
+ 26     NUM
+ 27     OR
+ 28     RETURN
+
+
+========================================
+Nonterminals
+========================================
+
+29      <ap>
+30      <ar>
+31      <attr>
+32      <com>
+33      <cond>
+34      <e>
+35      <f>
+36      <function>
+37      <lib>
+38      <loop>
+39      <opl>
+40      <param>
+41      <stm>
+42      <stm_>
+43      <t>
+
+
+========================================
+Rules
+========================================
+
+0       <ar> ::= '+'
+1       <ar> ::= '-'
+2       <ar> ::= OR
+3       <ap> ::= '*'
+4       <ap> ::= '/'
+5       <ap> ::= '%'
+6       <ap> ::= AND
+7       <e> ::= <e> <ar> <t>
+8       <e> ::= <t>
+9       <t> ::= <t> <ap> <f>
+10      <t> ::= <f>
+11      <f> ::= '(' <e> ')'
+12      <f> ::= ID
+13      <f> ::= NUM
+14      <opl> ::= <e> '!=' <e>
+15      <opl> ::= <e> '==' <e>
+16      <opl> ::= <e> '<' <e>
+17      <opl> ::= <e> '>' <e>
+18      <cond> ::= IF <opl> <stm> ELSE <stm>
+19      <attr> ::= ID '=' <e>
+20      <attr> ::= ID '=' <opl>
+21      <loop> ::= LOOP '(' <opl> ')' <stm>
+22      <loop> ::= LOOP <stm> '(' <opl> ')'
+23      <com> ::= <loop>
+24      <com> ::= <cond>
+25      <com> ::= <attr> ';'
+26      <com> ::= <function>
+27      <lib> ::= <function> <lib>
+28      <lib> ::= <function>
+29      <lib> ::= ''
+30      <stm> ::= '{' <stm_>
+31      <stm> ::= <com>
+32      <stm> ::= RETURN <opl> ';'
+33      <stm> ::= RETURN <e> ';'
+34      <stm_> ::= <com> <stm_>
+35      <stm_> ::= '}'
+36      <stm_> ::= RETURN <opl> ';' '}'
+37      <stm_> ::= RETURN <e> ';' '}'
+38      <function> ::= FUNCTION ID '(' <param> <stm>
+39      <param> ::= ID ')'
+40      <param> ::= ')'
+41      <param> ::= ID ',' <param>
+
+
+========================================
+LALR States
+========================================
+
+State 0
+        <S'> ::= _ <lib> (EOF)                                <S'> ::= ^ <lib> (EOF)
+        <lib> ::= _ <function> <lib>                          <lib> ::= ^ <function> <lib>
+        <lib> ::= _ <function>                                <lib> ::= ^ <function>
+        <lib> ::= _ ''                                        <lib> ::= ^ ''
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '' s 1
+        FUNCTION s 2
+        <function> g 3
+        <lib> g 4
+
+
+State 1
+        Prior States: 0, 3
+
+        <lib> ::= '' _                                        <lib> ::= '' ^
+
+        (EOF) r 29
+
+
+State 2
+        Prior States: 0, 3, 10, 13, 16, 27, 35, 74, 76
+
+        <function> ::= FUNCTION _ ID '(' <param> <stm>        <function> ::= FUNCTION ^ ID '(' <param> <stm>
+
+        ID s 5
+
+
+State 3
+        Prior States: 0, 3
+
+        <lib> ::= <function> _ <lib>                          <lib> ::= <function> ^ <lib>
+        <lib> ::= <function> _                                <lib> ::= <function> ^
+        <lib> ::= _ <function> <lib>                          <lib> ::= ^ <function> <lib>
+        <lib> ::= _ <function>                                <lib> ::= ^ <function>
+        <lib> ::= _ ''                                        <lib> ::= ^ ''
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '' s 1
+        FUNCTION s 2
+        <function> g 3
+        <lib> g 6
+        (EOF) r 28
+
+
+State 4
+        Prior States: 0
+
+        <S'> ::= <lib> _ (EOF)                                <S'> ::= <lib> ^ (EOF)
+
+        (EOF) a
+
+
+State 5
+        Prior States: 2
+
+        <function> ::= FUNCTION ID _ '(' <param> <stm>        <function> ::= FUNCTION ID ^ '(' <param> <stm>
+
+        '(' s 7
+
+
+State 6
+        Prior States: 3
+
+        <lib> ::= <function> <lib> _                          <lib> ::= <function> <lib> ^
+
+        (EOF) r 27
+
+
+State 7
+        Prior States: 5
+
+        <function> ::= FUNCTION ID '(' _ <param> <stm>        <function> ::= FUNCTION ID '(' ^ <param> <stm>
+        <param> ::= _ ID ')'                                  <param> ::= ^ ID ')'
+        <param> ::= _ ')'                                     <param> ::= ^ ')'
+        <param> ::= _ ID ',' <param>                          <param> ::= ^ ID ',' <param>
+
+        ')' s 8
+        ID s 9
+        <param> g 10
+
+
+State 8
+        Prior States: 7, 12
+
+        <param> ::= ')' _                                     <param> ::= ')' ^
+
+        '{' r 40
+        FUNCTION r 40
+        ID r 40
+        IF r 40
+        LOOP r 40
+        RETURN r 40
+
+
+State 9
+        Prior States: 7, 12
+
+        <param> ::= ID _ ')'                                  <param> ::= ID ^ ')'
+        <param> ::= ID _ ',' <param>                          <param> ::= ID ^ ',' <param>
+
+        ')' s 11
+        ',' s 12
+
+
+State 10
+        Prior States: 7
+
+        <function> ::= FUNCTION ID '(' <param> _ <stm>        <function> ::= FUNCTION ID '(' <param> ^ <stm>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm> ::= _ '{' <stm_>                                <stm> ::= ^ '{' <stm_>
+        <stm> ::= _ <com>                                     <stm> ::= ^ <com>
+        <stm> ::= _ RETURN <opl> ';'                          <stm> ::= ^ RETURN <opl> ';'
+        <stm> ::= _ RETURN <e> ';'                            <stm> ::= ^ RETURN <e> ';'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '{' s 13
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 17
+        <attr> g 18
+        <com> g 19
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm> g 23
+
+
+State 11
+        Prior States: 9
+
+        <param> ::= ID ')' _                                  <param> ::= ID ')' ^
+
+        '{' r 39
+        FUNCTION r 39
+        ID r 39
+        IF r 39
+        LOOP r 39
+        RETURN r 39
+
+
+State 12
+        Prior States: 9
+
+        <param> ::= ID ',' _ <param>                          <param> ::= ID ',' ^ <param>
+        <param> ::= _ ID ')'                                  <param> ::= ^ ID ')'
+        <param> ::= _ ')'                                     <param> ::= ^ ')'
+        <param> ::= _ ID ',' <param>                          <param> ::= ^ ID ',' <param>
+
+        ')' s 8
+        ID s 9
+        <param> g 24
+
+
+State 13
+        Prior States: 10, 16, 35, 74, 76
+
+        <stm> ::= '{' _ <stm_>                                <stm> ::= '{' ^ <stm_>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm_> ::= _ <com> <stm_>                             <stm_> ::= ^ <com> <stm_>
+        <stm_> ::= _ '}'                                      <stm_> ::= ^ '}'
+        <stm_> ::= _ RETURN <opl> ';' '}'                     <stm_> ::= ^ RETURN <opl> ';' '}'
+        <stm_> ::= _ RETURN <e> ';' '}'                       <stm_> ::= ^ RETURN <e> ';' '}'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '}' s 25
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 26
+        <attr> g 18
+        <com> g 27
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm_> g 28
+
+
+State 14
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <attr> ::= ID _ '=' <e>                               <attr> ::= ID ^ '=' <e>
+        <attr> ::= ID _ '=' <opl>                             <attr> ::= ID ^ '=' <opl>
+
+        '=' s 29
+
+
+State 15
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <cond> ::= IF _ <opl> <stm> ELSE <stm>                <cond> ::= IF ^ <opl> <stm> ELSE <stm>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 33
+        <f> g 34
+        <opl> g 35
+        <t> g 36
+
+
+State 16
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <loop> ::= LOOP _ '(' <opl> ')' <stm>                 <loop> ::= LOOP ^ '(' <opl> ')' <stm>
+        <loop> ::= LOOP _ <stm> '(' <opl> ')'                 <loop> ::= LOOP ^ <stm> '(' <opl> ')'
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm> ::= _ '{' <stm_>                                <stm> ::= ^ '{' <stm_>
+        <stm> ::= _ <com>                                     <stm> ::= ^ <com>
+        <stm> ::= _ RETURN <opl> ';'                          <stm> ::= ^ RETURN <opl> ';'
+        <stm> ::= _ RETURN <e> ';'                            <stm> ::= ^ RETURN <e> ';'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '(' s 37
+        '{' s 13
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 17
+        <attr> g 18
+        <com> g 19
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm> g 38
+
+
+State 17
+        Prior States: 10, 16, 35, 74, 76
+
+        <stm> ::= RETURN _ <opl> ';'                          <stm> ::= RETURN ^ <opl> ';'
+        <stm> ::= RETURN _ <e> ';'                            <stm> ::= RETURN ^ <e> ';'
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 39
+        <f> g 34
+        <opl> g 40
+        <t> g 36
+
+
+State 18
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <com> ::= <attr> _ ';'                                <com> ::= <attr> ^ ';'
+
+        ';' s 41
+
+
+State 19
+        Prior States: 10, 16, 35, 74, 76
+
+        <stm> ::= <com> _                                     <stm> ::= <com> ^
+
+        (EOF) r 31
+        '' r 31
+        '(' r 31
+        '}' r 31
+        ELSE r 31
+        FUNCTION r 31
+        ID r 31
+        IF r 31
+        LOOP r 31
+        RETURN r 31
+
+
+State 20
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <com> ::= <cond> _                                    <com> ::= <cond> ^
+
+        (EOF) r 24
+        '' r 24
+        '(' r 24
+        '}' r 24
+        ELSE r 24
+        FUNCTION r 24
+        ID r 24
+        IF r 24
+        LOOP r 24
+        RETURN r 24
+
+
+State 21
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <com> ::= <function> _                                <com> ::= <function> ^
+
+        (EOF) r 26
+        '' r 26
+        '(' r 26
+        '}' r 26
+        ELSE r 26
+        FUNCTION r 26
+        ID r 26
+        IF r 26
+        LOOP r 26
+        RETURN r 26
+
+
+State 22
+        Prior States: 10, 13, 16, 27, 35, 74, 76
+
+        <com> ::= <loop> _                                    <com> ::= <loop> ^
+
+        (EOF) r 23
+        '' r 23
+        '(' r 23
+        '}' r 23
+        ELSE r 23
+        FUNCTION r 23
+        ID r 23
+        IF r 23
+        LOOP r 23
+        RETURN r 23
+
+
+State 23
+        Prior States: 10
+
+        <function> ::= FUNCTION ID '(' <param> <stm> _        <function> ::= FUNCTION ID '(' <param> <stm> ^
+
+        (EOF) r 38
+        '' r 38
+        '(' r 38
+        '}' r 38
+        ELSE r 38
+        FUNCTION r 38
+        ID r 38
+        IF r 38
+        LOOP r 38
+        RETURN r 38
+
+
+State 24
+        Prior States: 12
+
+        <param> ::= ID ',' <param> _                          <param> ::= ID ',' <param> ^
+
+        '{' r 41
+        FUNCTION r 41
+        ID r 41
+        IF r 41
+        LOOP r 41
+        RETURN r 41
+
+
+State 25
+        Prior States: 13, 27
+
+        <stm_> ::= '}' _                                      <stm_> ::= '}' ^
+
+        (EOF) r 35
+        '' r 35
+        '(' r 35
+        '}' r 35
+        ELSE r 35
+        FUNCTION r 35
+        ID r 35
+        IF r 35
+        LOOP r 35
+        RETURN r 35
+
+
+State 26
+        Prior States: 13, 27
+
+        <stm_> ::= RETURN _ <opl> ';' '}'                     <stm_> ::= RETURN ^ <opl> ';' '}'
+        <stm_> ::= RETURN _ <e> ';' '}'                       <stm_> ::= RETURN ^ <e> ';' '}'
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 42
+        <f> g 34
+        <opl> g 43
+        <t> g 36
+
+
+State 27
+        Prior States: 13, 27
+
+        <stm_> ::= <com> _ <stm_>                             <stm_> ::= <com> ^ <stm_>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm_> ::= _ <com> <stm_>                             <stm_> ::= ^ <com> <stm_>
+        <stm_> ::= _ '}'                                      <stm_> ::= ^ '}'
+        <stm_> ::= _ RETURN <opl> ';' '}'                     <stm_> ::= ^ RETURN <opl> ';' '}'
+        <stm_> ::= _ RETURN <e> ';' '}'                       <stm_> ::= ^ RETURN <e> ';' '}'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '}' s 25
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 26
+        <attr> g 18
+        <com> g 27
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm_> g 44
+
+
+State 28
+        Prior States: 13
+
+        <stm> ::= '{' <stm_> _                                <stm> ::= '{' <stm_> ^
+
+        (EOF) r 30
+        '' r 30
+        '(' r 30
+        '}' r 30
+        ELSE r 30
+        FUNCTION r 30
+        ID r 30
+        IF r 30
+        LOOP r 30
+        RETURN r 30
+
+
+State 29
+        Prior States: 14
+
+        <attr> ::= ID '=' _ <e>                               <attr> ::= ID '=' ^ <e>
+        <attr> ::= ID '=' _ <opl>                             <attr> ::= ID '=' ^ <opl>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 45
+        <f> g 34
+        <opl> g 46
+        <t> g 36
+
+
+State 30
+        Prior States: 15, 17, 26, 29, 30, 37, 49, 51, 52, 53, 55, 61, 63
+
+        <f> ::= '(' _ <e> ')'                                 <f> ::= '(' ^ <e> ')'
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 47
+        <f> g 34
+        <t> g 36
+
+
+State 31
+        Prior States: 15, 17, 26, 29, 30, 37, 49, 51, 52, 53, 55, 61, 63
+
+        <f> ::= ID _                                          <f> ::= ID ^
+
+        '-' r 12
+        '!=' r 12
+        '%' r 12
+        ')' r 12
+        '*' r 12
+        '/' r 12
+        ';' r 12
+        '{' r 12
+        '+' r 12
+        '<' r 12
+        '==' r 12
+        '>' r 12
+        AND r 12
+        FUNCTION r 12
+        ID r 12
+        IF r 12
+        LOOP r 12
+        OR r 12
+        RETURN r 12
+
+
+State 32
+        Prior States: 15, 17, 26, 29, 30, 37, 49, 51, 52, 53, 55, 61, 63
+
+        <f> ::= NUM _                                         <f> ::= NUM ^
+
+        '-' r 13
+        '!=' r 13
+        '%' r 13
+        ')' r 13
+        '*' r 13
+        '/' r 13
+        ';' r 13
+        '{' r 13
+        '+' r 13
+        '<' r 13
+        '==' r 13
+        '>' r 13
+        AND r 13
+        FUNCTION r 13
+        ID r 13
+        IF r 13
+        LOOP r 13
+        OR r 13
+        RETURN r 13
+
+
+State 33
+        Prior States: 15, 37, 63
+
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <opl> ::= <e> _ '!=' <e>                              <opl> ::= <e> ^ '!=' <e>
+        <opl> ::= <e> _ '==' <e>                              <opl> ::= <e> ^ '==' <e>
+        <opl> ::= <e> _ '<' <e>                               <opl> ::= <e> ^ '<' <e>
+        <opl> ::= <e> _ '>' <e>                               <opl> ::= <e> ^ '>' <e>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '!=' s 49
+        '+' s 50
+        '<' s 51
+        '==' s 52
+        '>' s 53
+        OR s 54
+        <ar> g 55
+
+
+State 34
+        Prior States: 15, 17, 26, 29, 30, 37, 49, 51, 52, 53, 55, 63
+
+        <t> ::= <f> _                                         <t> ::= <f> ^
+
+        '-' r 10
+        '!=' r 10
+        '%' r 10
+        ')' r 10
+        '*' r 10
+        '/' r 10
+        ';' r 10
+        '{' r 10
+        '+' r 10
+        '<' r 10
+        '==' r 10
+        '>' r 10
+        AND r 10
+        FUNCTION r 10
+        ID r 10
+        IF r 10
+        LOOP r 10
+        OR r 10
+        RETURN r 10
+
+
+State 35
+        Prior States: 15
+
+        <cond> ::= IF <opl> _ <stm> ELSE <stm>                <cond> ::= IF <opl> ^ <stm> ELSE <stm>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm> ::= _ '{' <stm_>                                <stm> ::= ^ '{' <stm_>
+        <stm> ::= _ <com>                                     <stm> ::= ^ <com>
+        <stm> ::= _ RETURN <opl> ';'                          <stm> ::= ^ RETURN <opl> ';'
+        <stm> ::= _ RETURN <e> ';'                            <stm> ::= ^ RETURN <e> ';'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '{' s 13
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 17
+        <attr> g 18
+        <com> g 19
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm> g 56
+
+
+State 36
+        Prior States: 15, 17, 26, 29, 30, 37, 49, 51, 52, 53, 63
+
+        <e> ::= <t> _                                         <e> ::= <t> ^
+        <t> ::= <t> _ <ap> <f>                                <t> ::= <t> ^ <ap> <f>
+        <ap> ::= _ '*'                                        <ap> ::= ^ '*'
+        <ap> ::= _ '/'                                        <ap> ::= ^ '/'
+        <ap> ::= _ '%'                                        <ap> ::= ^ '%'
+        <ap> ::= _ AND                                        <ap> ::= ^ AND
+
+        '%' s 57
+        '*' s 58
+        '/' s 59
+        AND s 60
+        <ap> g 61
+        '-' r 8
+        '!=' r 8
+        ')' r 8
+        ';' r 8
+        '{' r 8
+        '+' r 8
+        '<' r 8
+        '==' r 8
+        '>' r 8
+        FUNCTION r 8
+        ID r 8
+        IF r 8
+        LOOP r 8
+        OR r 8
+        RETURN r 8
+
+
+State 37
+        Prior States: 16
+
+        <loop> ::= LOOP '(' _ <opl> ')' <stm>                 <loop> ::= LOOP '(' ^ <opl> ')' <stm>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 33
+        <f> g 34
+        <opl> g 62
+        <t> g 36
+
+
+State 38
+        Prior States: 16
+
+        <loop> ::= LOOP <stm> _ '(' <opl> ')'                 <loop> ::= LOOP <stm> ^ '(' <opl> ')'
+
+        '(' s 63
+
+
+State 39
+        Prior States: 17
+
+        <stm> ::= RETURN <e> _ ';'                            <stm> ::= RETURN <e> ^ ';'
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <opl> ::= <e> _ '!=' <e>                              <opl> ::= <e> ^ '!=' <e>
+        <opl> ::= <e> _ '==' <e>                              <opl> ::= <e> ^ '==' <e>
+        <opl> ::= <e> _ '<' <e>                               <opl> ::= <e> ^ '<' <e>
+        <opl> ::= <e> _ '>' <e>                               <opl> ::= <e> ^ '>' <e>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '!=' s 49
+        ';' s 64
+        '+' s 50
+        '<' s 51
+        '==' s 52
+        '>' s 53
+        OR s 54
+        <ar> g 55
+
+
+State 40
+        Prior States: 17
+
+        <stm> ::= RETURN <opl> _ ';'                          <stm> ::= RETURN <opl> ^ ';'
+
+        ';' s 65
+
+
+State 41
+        Prior States: 18
+
+        <com> ::= <attr> ';' _                                <com> ::= <attr> ';' ^
+
+        (EOF) r 25
+        '' r 25
+        '(' r 25
+        '}' r 25
+        ELSE r 25
+        FUNCTION r 25
+        ID r 25
+        IF r 25
+        LOOP r 25
+        RETURN r 25
+
+
+State 42
+        Prior States: 26
+
+        <stm_> ::= RETURN <e> _ ';' '}'                       <stm_> ::= RETURN <e> ^ ';' '}'
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <opl> ::= <e> _ '!=' <e>                              <opl> ::= <e> ^ '!=' <e>
+        <opl> ::= <e> _ '==' <e>                              <opl> ::= <e> ^ '==' <e>
+        <opl> ::= <e> _ '<' <e>                               <opl> ::= <e> ^ '<' <e>
+        <opl> ::= <e> _ '>' <e>                               <opl> ::= <e> ^ '>' <e>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '!=' s 49
+        ';' s 66
+        '+' s 50
+        '<' s 51
+        '==' s 52
+        '>' s 53
+        OR s 54
+        <ar> g 55
+
+
+State 43
+        Prior States: 26
+
+        <stm_> ::= RETURN <opl> _ ';' '}'                     <stm_> ::= RETURN <opl> ^ ';' '}'
+
+        ';' s 67
+
+
+State 44
+        Prior States: 27
+
+        <stm_> ::= <com> <stm_> _                             <stm_> ::= <com> <stm_> ^
+
+        (EOF) r 34
+        '' r 34
+        '(' r 34
+        '}' r 34
+        ELSE r 34
+        FUNCTION r 34
+        ID r 34
+        IF r 34
+        LOOP r 34
+        RETURN r 34
+
+
+State 45
+        Prior States: 29
+
+        <attr> ::= ID '=' <e> _                               <attr> ::= ID '=' <e> ^
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <opl> ::= <e> _ '!=' <e>                              <opl> ::= <e> ^ '!=' <e>
+        <opl> ::= <e> _ '==' <e>                              <opl> ::= <e> ^ '==' <e>
+        <opl> ::= <e> _ '<' <e>                               <opl> ::= <e> ^ '<' <e>
+        <opl> ::= <e> _ '>' <e>                               <opl> ::= <e> ^ '>' <e>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '!=' s 49
+        '+' s 50
+        '<' s 51
+        '==' s 52
+        '>' s 53
+        OR s 54
+        <ar> g 55
+        ';' r 19
+
+
+State 46
+        Prior States: 29
+
+        <attr> ::= ID '=' <opl> _                             <attr> ::= ID '=' <opl> ^
+
+        ';' r 20
+
+
+State 47
+        Prior States: 30
+
+        <f> ::= '(' <e> _ ')'                                 <f> ::= '(' <e> ^ ')'
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        ')' s 68
+        '+' s 50
+        OR s 54
+        <ar> g 55
+
+
+State 48
+        Prior States: 33, 39, 42, 45, 47, 69, 70, 71, 72
+
+        <ar> ::= '-' _                                        <ar> ::= '-' ^
+
+        '(' r 1
+        ID r 1
+        NUM r 1
+
+
+State 49
+        Prior States: 33, 39, 42, 45
+
+        <opl> ::= <e> '!=' _ <e>                              <opl> ::= <e> '!=' ^ <e>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 69
+        <f> g 34
+        <t> g 36
+
+
+State 50
+        Prior States: 33, 39, 42, 45, 47, 69, 70, 71, 72
+
+        <ar> ::= '+' _                                        <ar> ::= '+' ^
+
+        '(' r 0
+        ID r 0
+        NUM r 0
+
+
+State 51
+        Prior States: 33, 39, 42, 45
+
+        <opl> ::= <e> '<' _ <e>                               <opl> ::= <e> '<' ^ <e>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 70
+        <f> g 34
+        <t> g 36
+
+
+State 52
+        Prior States: 33, 39, 42, 45
+
+        <opl> ::= <e> '==' _ <e>                              <opl> ::= <e> '==' ^ <e>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 71
+        <f> g 34
+        <t> g 36
+
+
+State 53
+        Prior States: 33, 39, 42, 45
+
+        <opl> ::= <e> '>' _ <e>                               <opl> ::= <e> '>' ^ <e>
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 72
+        <f> g 34
+        <t> g 36
+
+
+State 54
+        Prior States: 33, 39, 42, 45, 47, 69, 70, 71, 72
+
+        <ar> ::= OR _                                         <ar> ::= OR ^
+
+        '(' r 2
+        ID r 2
+        NUM r 2
+
+
+State 55
+        Prior States: 33, 39, 42, 45, 47, 69, 70, 71, 72
+
+        <e> ::= <e> <ar> _ <t>                                <e> ::= <e> <ar> ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <f> g 34
+        <t> g 73
+
+
+State 56
+        Prior States: 35
+
+        <cond> ::= IF <opl> <stm> _ ELSE <stm>                <cond> ::= IF <opl> <stm> ^ ELSE <stm>
+
+        ELSE s 74
+
+
+State 57
+        Prior States: 36, 73
+
+        <ap> ::= '%' _                                        <ap> ::= '%' ^
+
+        '(' r 5
+        ID r 5
+        NUM r 5
+
+
+State 58
+        Prior States: 36, 73
+
+        <ap> ::= '*' _                                        <ap> ::= '*' ^
+
+        '(' r 3
+        ID r 3
+        NUM r 3
+
+
+State 59
+        Prior States: 36, 73
+
+        <ap> ::= '/' _                                        <ap> ::= '/' ^
+
+        '(' r 4
+        ID r 4
+        NUM r 4
+
+
+State 60
+        Prior States: 36, 73
+
+        <ap> ::= AND _                                        <ap> ::= AND ^
+
+        '(' r 6
+        ID r 6
+        NUM r 6
+
+
+State 61
+        Prior States: 36, 73
+
+        <t> ::= <t> <ap> _ <f>                                <t> ::= <t> <ap> ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <f> g 75
+
+
+State 62
+        Prior States: 37
+
+        <loop> ::= LOOP '(' <opl> _ ')' <stm>                 <loop> ::= LOOP '(' <opl> ^ ')' <stm>
+
+        ')' s 76
+
+
+State 63
+        Prior States: 38
+
+        <loop> ::= LOOP <stm> '(' _ <opl> ')'                 <loop> ::= LOOP <stm> '(' ^ <opl> ')'
+        <e> ::= _ <e> <ar> <t>                                <e> ::= ^ <e> <ar> <t>
+        <e> ::= _ <t>                                         <e> ::= ^ <t>
+        <t> ::= _ <t> <ap> <f>                                <t> ::= ^ <t> <ap> <f>
+        <t> ::= _ <f>                                         <t> ::= ^ <f>
+        <f> ::= _ '(' <e> ')'                                 <f> ::= ^ '(' <e> ')'
+        <f> ::= _ ID                                          <f> ::= ^ ID
+        <f> ::= _ NUM                                         <f> ::= ^ NUM
+        <opl> ::= _ <e> '!=' <e>                              <opl> ::= ^ <e> '!=' <e>
+        <opl> ::= _ <e> '==' <e>                              <opl> ::= ^ <e> '==' <e>
+        <opl> ::= _ <e> '<' <e>                               <opl> ::= ^ <e> '<' <e>
+        <opl> ::= _ <e> '>' <e>                               <opl> ::= ^ <e> '>' <e>
+
+        '(' s 30
+        ID s 31
+        NUM s 32
+        <e> g 33
+        <f> g 34
+        <opl> g 77
+        <t> g 36
+
+
+State 64
+        Prior States: 39
+
+        <stm> ::= RETURN <e> ';' _                            <stm> ::= RETURN <e> ';' ^
+
+        (EOF) r 33
+        '' r 33
+        '(' r 33
+        '}' r 33
+        ELSE r 33
+        FUNCTION r 33
+        ID r 33
+        IF r 33
+        LOOP r 33
+        RETURN r 33
+
+
+State 65
+        Prior States: 40
+
+        <stm> ::= RETURN <opl> ';' _                          <stm> ::= RETURN <opl> ';' ^
+
+        (EOF) r 32
+        '' r 32
+        '(' r 32
+        '}' r 32
+        ELSE r 32
+        FUNCTION r 32
+        ID r 32
+        IF r 32
+        LOOP r 32
+        RETURN r 32
+
+
+State 66
+        Prior States: 42
+
+        <stm_> ::= RETURN <e> ';' _ '}'                       <stm_> ::= RETURN <e> ';' ^ '}'
+
+        '}' s 78
+
+
+State 67
+        Prior States: 43
+
+        <stm_> ::= RETURN <opl> ';' _ '}'                     <stm_> ::= RETURN <opl> ';' ^ '}'
+
+        '}' s 79
+
+
+State 68
+        Prior States: 47
+
+        <f> ::= '(' <e> ')' _                                 <f> ::= '(' <e> ')' ^
+
+        '-' r 11
+        '!=' r 11
+        '%' r 11
+        ')' r 11
+        '*' r 11
+        '/' r 11
+        ';' r 11
+        '{' r 11
+        '+' r 11
+        '<' r 11
+        '==' r 11
+        '>' r 11
+        AND r 11
+        FUNCTION r 11
+        ID r 11
+        IF r 11
+        LOOP r 11
+        OR r 11
+        RETURN r 11
+
+
+State 69
+        Prior States: 49
+
+        <opl> ::= <e> '!=' <e> _                              <opl> ::= <e> '!=' <e> ^
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '+' s 50
+        OR s 54
+        <ar> g 55
+        ')' r 14
+        ';' r 14
+        '{' r 14
+        FUNCTION r 14
+        ID r 14
+        IF r 14
+        LOOP r 14
+        RETURN r 14
+
+
+State 70
+        Prior States: 51
+
+        <opl> ::= <e> '<' <e> _                               <opl> ::= <e> '<' <e> ^
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '+' s 50
+        OR s 54
+        <ar> g 55
+        ')' r 16
+        ';' r 16
+        '{' r 16
+        FUNCTION r 16
+        ID r 16
+        IF r 16
+        LOOP r 16
+        RETURN r 16
+
+
+State 71
+        Prior States: 52
+
+        <opl> ::= <e> '==' <e> _                              <opl> ::= <e> '==' <e> ^
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '+' s 50
+        OR s 54
+        <ar> g 55
+        ')' r 15
+        ';' r 15
+        '{' r 15
+        FUNCTION r 15
+        ID r 15
+        IF r 15
+        LOOP r 15
+        RETURN r 15
+
+
+State 72
+        Prior States: 53
+
+        <opl> ::= <e> '>' <e> _                               <opl> ::= <e> '>' <e> ^
+        <e> ::= <e> _ <ar> <t>                                <e> ::= <e> ^ <ar> <t>
+        <ar> ::= _ '+'                                        <ar> ::= ^ '+'
+        <ar> ::= _ '-'                                        <ar> ::= ^ '-'
+        <ar> ::= _ OR                                         <ar> ::= ^ OR
+
+        '-' s 48
+        '+' s 50
+        OR s 54
+        <ar> g 55
+        ')' r 17
+        ';' r 17
+        '{' r 17
+        FUNCTION r 17
+        ID r 17
+        IF r 17
+        LOOP r 17
+        RETURN r 17
+
+
+State 73
+        Prior States: 55
+
+        <e> ::= <e> <ar> <t> _                                <e> ::= <e> <ar> <t> ^
+        <t> ::= <t> _ <ap> <f>                                <t> ::= <t> ^ <ap> <f>
+        <ap> ::= _ '*'                                        <ap> ::= ^ '*'
+        <ap> ::= _ '/'                                        <ap> ::= ^ '/'
+        <ap> ::= _ '%'                                        <ap> ::= ^ '%'
+        <ap> ::= _ AND                                        <ap> ::= ^ AND
+
+        '%' s 57
+        '*' s 58
+        '/' s 59
+        AND s 60
+        <ap> g 61
+        '-' r 7
+        '!=' r 7
+        ')' r 7
+        ';' r 7
+        '{' r 7
+        '+' r 7
+        '<' r 7
+        '==' r 7
+        '>' r 7
+        FUNCTION r 7
+        ID r 7
+        IF r 7
+        LOOP r 7
+        OR r 7
+        RETURN r 7
+
+
+State 74
+        Prior States: 56
+
+        <cond> ::= IF <opl> <stm> ELSE _ <stm>                <cond> ::= IF <opl> <stm> ELSE ^ <stm>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm> ::= _ '{' <stm_>                                <stm> ::= ^ '{' <stm_>
+        <stm> ::= _ <com>                                     <stm> ::= ^ <com>
+        <stm> ::= _ RETURN <opl> ';'                          <stm> ::= ^ RETURN <opl> ';'
+        <stm> ::= _ RETURN <e> ';'                            <stm> ::= ^ RETURN <e> ';'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '{' s 13
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 17
+        <attr> g 18
+        <com> g 19
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm> g 80
+
+
+State 75
+        Prior States: 61
+
+        <t> ::= <t> <ap> <f> _                                <t> ::= <t> <ap> <f> ^
+
+        '-' r 9
+        '!=' r 9
+        '%' r 9
+        ')' r 9
+        '*' r 9
+        '/' r 9
+        ';' r 9
+        '{' r 9
+        '+' r 9
+        '<' r 9
+        '==' r 9
+        '>' r 9
+        AND r 9
+        FUNCTION r 9
+        ID r 9
+        IF r 9
+        LOOP r 9
+        OR r 9
+        RETURN r 9
+
+
+State 76
+        Prior States: 62
+
+        <loop> ::= LOOP '(' <opl> ')' _ <stm>                 <loop> ::= LOOP '(' <opl> ')' ^ <stm>
+        <cond> ::= _ IF <opl> <stm> ELSE <stm>                <cond> ::= ^ IF <opl> <stm> ELSE <stm>
+        <attr> ::= _ ID '=' <e>                               <attr> ::= ^ ID '=' <e>
+        <attr> ::= _ ID '=' <opl>                             <attr> ::= ^ ID '=' <opl>
+        <loop> ::= _ LOOP '(' <opl> ')' <stm>                 <loop> ::= ^ LOOP '(' <opl> ')' <stm>
+        <loop> ::= _ LOOP <stm> '(' <opl> ')'                 <loop> ::= ^ LOOP <stm> '(' <opl> ')'
+        <com> ::= _ <loop>                                    <com> ::= ^ <loop>
+        <com> ::= _ <cond>                                    <com> ::= ^ <cond>
+        <com> ::= _ <attr> ';'                                <com> ::= ^ <attr> ';'
+        <com> ::= _ <function>                                <com> ::= ^ <function>
+        <stm> ::= _ '{' <stm_>                                <stm> ::= ^ '{' <stm_>
+        <stm> ::= _ <com>                                     <stm> ::= ^ <com>
+        <stm> ::= _ RETURN <opl> ';'                          <stm> ::= ^ RETURN <opl> ';'
+        <stm> ::= _ RETURN <e> ';'                            <stm> ::= ^ RETURN <e> ';'
+        <function> ::= _ FUNCTION ID '(' <param> <stm>        <function> ::= ^ FUNCTION ID '(' <param> <stm>
+
+        '{' s 13
+        FUNCTION s 2
+        ID s 14
+        IF s 15
+        LOOP s 16
+        RETURN s 17
+        <attr> g 18
+        <com> g 19
+        <cond> g 20
+        <function> g 21
+        <loop> g 22
+        <stm> g 81
+
+
+State 77
+        Prior States: 63
+
+        <loop> ::= LOOP <stm> '(' <opl> _ ')'                 <loop> ::= LOOP <stm> '(' <opl> ^ ')'
+
+        ')' s 82
+
+
+State 78
+        Prior States: 66
+
+        <stm_> ::= RETURN <e> ';' '}' _                       <stm_> ::= RETURN <e> ';' '}' ^
+
+        (EOF) r 37
+        '' r 37
+        '(' r 37
+        '}' r 37
+        ELSE r 37
+        FUNCTION r 37
+        ID r 37
+        IF r 37
+        LOOP r 37
+        RETURN r 37
+
+
+State 79
+        Prior States: 67
+
+        <stm_> ::= RETURN <opl> ';' '}' _                     <stm_> ::= RETURN <opl> ';' '}' ^
+
+        (EOF) r 36
+        '' r 36
+        '(' r 36
+        '}' r 36
+        ELSE r 36
+        FUNCTION r 36
+        ID r 36
+        IF r 36
+        LOOP r 36
+        RETURN r 36
+
+
+State 80
+        Prior States: 74
+
+        <cond> ::= IF <opl> <stm> ELSE <stm> _                <cond> ::= IF <opl> <stm> ELSE <stm> ^
+
+        (EOF) r 18
+        '' r 18
+        '(' r 18
+        '}' r 18
+        ELSE r 18
+        FUNCTION r 18
+        ID r 18
+        IF r 18
+        LOOP r 18
+        RETURN r 18
+
+
+State 81
+        Prior States: 76
+
+        <loop> ::= LOOP '(' <opl> ')' <stm> _                 <loop> ::= LOOP '(' <opl> ')' <stm> ^
+
+        (EOF) r 21
+        '' r 21
+        '(' r 21
+        '}' r 21
+        ELSE r 21
+        FUNCTION r 21
+        ID r 21
+        IF r 21
+        LOOP r 21
+        RETURN r 21
+
+
+State 82
+        Prior States: 77
+
+        <loop> ::= LOOP <stm> '(' <opl> ')' _                 <loop> ::= LOOP <stm> '(' <opl> ')' ^
+
+        (EOF) r 22
+        '' r 22
+        '(' r 22
+        '}' r 22
+        ELSE r 22
+        FUNCTION r 22
+        ID r 22
+        IF r 22
+        LOOP r 22
+        RETURN r 22
+
+
+
+
+========================================
+System Log
+========================================
+
+Grammar        Success           The grammar was successfully analyzed
+LALR States    Success           LALR Table was succesfully created
+DFA States     Success           The DFA State Table was successfully created
+System         Success           The grammar was successfully analyzed and tables were created.
+
+

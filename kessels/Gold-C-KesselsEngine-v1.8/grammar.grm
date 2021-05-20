@@ -1,0 +1,30 @@
+"Name"             = 'Calculator'
+"Version"          = '1.8'
+"Author"           = 'Jeroen Kessels'
+"About"            = 'Simple calculator.'
+
+"Case Sensitive"   = True
+"Start Symbol"     = <Calculations>
+
+Comment Start      = '/*'
+Comment End        = '*/'
+Comment Line       = '//' | 'REM' | '#' | '--' | ''
+
+DecLiteral         = ([123456789]{Number}* | 0)
+
+
+<Calculations>   ::= <Calculate> <Calculations>
+                   |
+
+<Calculate>      ::= 'print' '(' <Expression> ')'
+
+<Expression>     ::= <MultiplyDivide> '+' <Expression>
+                   | <MultiplyDivide> '-' <Expression>
+                   | <MultiplyDivide>
+
+<MultiplyDivide> ::= <Value> '*' <MultiplyDivide>
+                   | <Value> '/' <MultiplyDivide>
+                   | <Value>
+
+<Value>          ::= DecLiteral
+                   | '(' <Expression> ')'

@@ -1,0 +1,37 @@
+all : Example1.exe Example2.exe Example3.exe Example4.exe
+
+
+Example1.exe : Example1.obj engine.obj makemic
+  link.exe /nologo Example1.obj engine.obj
+
+Example1.obj : Example1.c engine.h grammar.h makemic
+  cl.exe /O2 /Gd /c /W3 /MT /nologo Example1.c
+
+
+
+Example2.exe : Example2.obj engine.obj makemic
+  link.exe /nologo Example2.obj engine.obj
+
+Example2.obj : Example2.c engine.h grammar.h makemic
+  cl.exe /O2 /Gd /c /W3 /MT /nologo Example2.c
+
+
+
+Example3.exe : Example3.obj engine.obj makemic
+  link.exe /nologo Example3.obj engine.obj
+
+Example3.obj : Example3.c engine.h grammar.h makemic
+  cl.exe /O2 /Gd /c /W3 /MT /nologo Example3.c
+
+
+
+Example4.exe : Example4.obj engine.obj makemic
+  link.exe /nologo Example4.obj engine.obj
+
+Example4.obj : Example4.c engine.h grammar.h makemic
+  cl.exe /O2 /Gd /c /W3 /MT /nologo Example4.c
+
+
+
+engine.obj : engine.c engine.h makemic
+  cl.exe /O2 /Gd /c /W3 /MT /nologo engine.c
