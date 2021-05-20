@@ -5,8 +5,8 @@
  *      Author: artur
  */
 
-#ifndef MY_COMPYLER_H_
-#define MY_COMPYLER_H_
+#ifndef MY_COMPILER_H_
+#define MY_COMPILER_H_
 
 struct struct_entries{
 	int id;
@@ -24,4 +24,4 @@ struct struct_TS{
 }typedef TS;
 
 
-#endif /* MY_COMPYLER_H_ */
+#endif /* MY_COMPILER_H_ */

@@ -25,11 +25,11 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		err = [0-9]+"\."?[0-9]*[_a-zA-Z];
 
 //		null = [\s\t\n]*;
+		return = "return";
 		function = "function";
 		loop = "loop";
 		if = "if";
 		else = "else";
-		printf = "printf";
 		id = [a-zA-Z][_0-9a-zA-Z]*;
 		num = [0-9]+"\."?[0-9]*;
 		openc = "{";
@@ -37,7 +37,7 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		openp = "(";
 		closep = ")";
 		equal = "==";
-		diff = "=";
+		diff = "!=";
 		attr = "=";
 		enddot = ";";
 		dot = ".";
@@ -47,11 +47,11 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 
     	[\x00] { return 0; } // qualquer simbolo whitespace sai do loop
 //		null {printf("_");return 0;}
+		return {write_ts(saved,"RETURN", line, ts,0); goto loop;}
 		function {write_ts(saved,"FUNCTION", line, ts,0); goto loop;}
 		loop {write_ts(saved,"LOOP", line, ts,0); goto loop;}
 		if {write_ts(saved,"IF", line, ts,0); goto loop;}
 		else {write_ts(saved,"ELSE", line, ts,0); goto loop;}
-		printf {write_ts(saved,"PRINTF", line, ts,0); goto loop;}
 		id {write_ts(saved,"ID", line, ts,0); goto loop;}
 		num {
 			write_ts(saved,"NUM", line, ts,atoi(saved));

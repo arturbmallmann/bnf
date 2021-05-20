@@ -34,19 +34,19 @@ char *LoadInputFile(char *FileName) {
   /* Open the file. */
   Fin = fopen(FileName,"rb");
   if (Fin == NULL) {
-    fprintf(stdout,"Could not open input file:     return(NULL);
+    fprintf(stdout,"Could not open input file:     return(NULL);");
     }
 
   /* Get the size of the file. */
   if (fstat(fileno(Fin),&statbuf) != 0) {
-    fprintf(stdout,"Could not stat() the input file:     fclose(Fin);
+    fprintf(stdout,"Could not stat() the input file:     fclose(Fin);");
     return(NULL);
     }
 
   /* Allocate memory for the input. */
   InputBuf = (char *)malloc(statbuf.st_size + 1);
   if (InputBuf == NULL) {
-    fprintf(stdout,"Not enough memory to load the file:     fclose(Fin);
+    fprintf(stdout,"Not enough memory to load the file:     fclose(Fin);");
     return(NULL);
     }
 
@@ -59,7 +59,7 @@ char *LoadInputFile(char *FileName) {
 
   /* Exit if there was an error while reading the file. */
   if (BytesRead != statbuf.st_size) {
-    fprintf(stdout,"Error while reading input file:     free(InputBuf);
+    fprintf(stdout,"Error while reading input file:     free(InputBuf);");
     return(NULL);
     }
 
@@ -80,7 +80,7 @@ void ReadableString(char *Input, char *Output, long int Width) {
         if (Width > 1) *Output++ = *Input;
       } else {
         if (Width > 4) {
-          sprintf(s1,"          *Output++ = '[';
+          sprintf(s1,"          *Output++ = '['";
           *Output++ = s1[0];
           *Output++ = s1[1];
           *Output++ = ']';
@@ -101,10 +101,10 @@ void ShowErrorMessage(struct ParseDataStruct *Data, char *Message) {
   Token = Data->TokenStack;
   if (Token != NULL) Token = Token->NextToken;
   if (Token == NULL) {
-    fprintf(stdout,"    return;
+    fprintf(stdout,"    return;");
     }
   if (Token->Data == NULL) {
-    fprintf(stdout,"d column       Token->Column);
+    fprintf(stdout,"d column       Token->Column);");
     return;
     }
   ReadableString(Token->Data,s1,BUFSIZ);
@@ -1177,7 +1177,7 @@ char *Interpret(struct TokenStruct *Token, int Debug, int Indent) {
   if (Token->Reduction == NULL) {
     if (Debug > 0) {
       ShowIndent(Indent);
-      fprintf(stdout,"      }
+      fprintf(stdout,"      }");
     return(strdup(Token->Data));
     }
 
@@ -1187,7 +1187,7 @@ char *Interpret(struct TokenStruct *Token, int Debug, int Indent) {
   /* Call the rule and return the result. */
   if (Debug > 0) {
     ShowIndent(Indent);
-    fprintf(stdout,"    }
+    fprintf(stdout,"    }");
   return(RuleJumpTable[Token->Reduction->Rule](Token,Debug,Indent + 1));
   }
 

@@ -22,7 +22,8 @@ unsigned int tb2fb(char * v) { //two bytes to four bytes
 }
 union value{
 	char b;
-	char i[2];
+//	char i[2];
+	unsigned short i;
 	wchar_t * str;
 }typedef u_value;
 struct entrie_s{

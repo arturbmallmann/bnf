@@ -20,18 +20,21 @@
 <f> ::= '(' <e> ')'
      | ID 
      | NUM 
+     | STR
      
 <cond> ::= IF <e> <stm> ELSE <stm>
 <attr> ::= ID '=' <e>
 <loop> ::= LOOP'('<e>')'<stm>
         |LOOP <stm>'('<e>')'
+<call> ::= ID '('<e>')'';'
 <com> ::= <loop>
        | <cond>
        | <attr>';'
+       | <call>
        |<function>
 <lib> ::= <function><lib>
        |<function>
-       |''
+       |'$'
 <stm> ::= '{'<stm_>
        | <com>
        |RETURN <e>';'

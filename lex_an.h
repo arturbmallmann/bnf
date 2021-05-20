@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "my_compyler.h"
+#include "my_compiler.h"
 static int lex(const char *YYCURSOR, const int line, TS * ts);
 
 void lex_check(char * file, TS * ts);

@@ -1,0 +1,8 @@
+function nome(){
+	printf ( artur ) ;
+	function aaa() { }
+	a = 133;
+	b = 133.22;
+	aaa = "araturgads";
+	return a;
+}
