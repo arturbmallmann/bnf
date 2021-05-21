@@ -10,23 +10,20 @@
 #include <stdio.h>
 #include <vector>
 
+#include "my_compiler.h"
+
 using namespace std;
 int main(int argc, char **argv){
 
 	cout << argc <<endl;
-	ifstream f = ifstream(argc==2 ? argv[1] : "gramma_slr_v1.cgt",std::ios::in | std::ios::binary);
+	ifstream f = ifstream(argc==2 ? argv[1] : "gramma_slr_v1.cgt",ios::in | ios::binary);
+	fstream sts = fstream(argc==2 ? argv[1] : "TS.out",ios::in | ios::out | ios::binary);
 
-//	cout<<"teste";
-//	wfstream f ("gramma_slr_v1.cgt",std::ios::in);// | std::ios::binary);
-//	wchar_t m;
-	char m;
-//	fwprintf(stdout,L"end? %d\n",f.eof());
-//	f.seekg(0,ios::end);
-//	printf("end? %d tellg %d \n",(int)f.eof(),(int)f.tellg());
-//	f.read(&m, 1);
-//	printf("end? %d tellg %d \n",(int)f.eof(),(int)f.tellg());
-
-//	wchar_t line[50];
+	TS ts;
+	read_file<int>((ifstream *)&sts, &(ts.qnt_entries));
+	ts.entries = ( entries_t*) malloc ( sizeof(entries_t)*ts.qnt_entries );
+	for (int i=0; i < ts.qnt_entries; i++)
+		read_file<entries_t>((ifstream*)&sts, &(ts.entries[i]));
 	char16_t line[23];
 	int l_count=0;
 	do {
@@ -34,26 +31,23 @@ int main(int argc, char **argv){
 		l_count++;
 	}while(l_count < 24 );
 
-//	char size[2];
 	unsigned short size;
 	int count = 0;
-//	printf ("begin: %zu",line,2);
+
+	//Lê entrada
 	size_t wcs_sz = sizeof line / sizeof *line;
 	printf("%zu UTF-16 code units: [ ", wcs_sz);
-//    for (size_t n = 0; n < wcs_sz; ++n) printf("%#x ", line[n]);
+//  for (size_t n = 0; n < wcs_sz; ++n) printf("%#x ", line[n]);
     for (size_t n = 0; n < wcs_sz; ++n) printf("%c", line[n]);
     printf("]\n");
-//		cout<<line<<endl;
-//	return 0;
-//	f.seekg(48,ios::beg); //46 unicodes + 1*2
 
 	vector<record> rec;
 	printf("end? %d tellg %d \n",(int)f.eof(),(int)f.tellg());
+	char m;
 	while(!f.eof()){
 //		read_file<wchar_t>(&f,&m);
 		read_file<char>(&f, &m);
-//		cout<<"M> "<<m<<endl;
-//		return 0;
+
 		printf("[%d]Byte: %c (%d)\n",count++,m,m);//<<" size: "<<isize<<endl;
 //		if ( m == 'M'||m=='P'){
 
@@ -96,7 +90,8 @@ int main(int argc, char **argv){
 						read_file<char16_t> (&f, &line[l_count]);
 //							fwprintf (stdout,L"S: %c",&line[l_count]);
 //							cout<<"s:\n";
-					}while( line[l_count++] != 0 );
+					} while( line[l_count++] != 0 );
+					line[l_count] = (char16_t)0;
 //						fwscanf(((fstream)f).,L"%s\n",line);
 					for (int n = 0; n < l_count; ++n) printf("%c", line[n]);
 					break;

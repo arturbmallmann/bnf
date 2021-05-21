@@ -1,1 +1,11 @@
-FUNCTION ID ( ) { ID ( ID ) ; FUNCTION ID ( ) { } ID = NUM ; ID = NUM ; ID = STR ; RETURN ID ; } $
+FUNCTION ID ( ID ) { 
+ ID ( ) ;
+ FUNCTION ID ( ) { } ID = NUM ; 
+ ID = NUM ; 
+ ID = STR ;
+ RETURN (ID + ID) ;
+}
+FUNCTION ID (){
+ ID();    
+}
+$

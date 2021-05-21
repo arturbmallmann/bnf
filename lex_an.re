@@ -36,6 +36,10 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		closec = "}";
 		openp = "(";
 		closep = ")";
+		plus = "+";
+		minus = "-";
+		mult = "*";
+		div = "/";
 		equal = "==";
 		diff = "!=";
 		attr = "=";
@@ -60,6 +64,10 @@ static int lex(const char *YYCURSOR, const int line, TS * ts)
 		closec {write_ts(saved,"}", line, ts,0); goto loop;}
 		openp {write_ts(saved,"(", line, ts,0); goto loop;}
 		closep {write_ts(saved,")", line, ts,0); goto loop;}
+		plus {write_ts(saved,"+", line, ts,0); goto loop;}
+		minus {write_ts(saved,"-", line, ts,0); goto loop;}
+		mult {write_ts(saved,"*", line, ts,0); goto loop;}
+		div {write_ts(saved,"/", line, ts,0); goto loop;}
 		equal {write_ts(saved,"==", line, ts,0); goto loop;}
 		diff {write_ts(saved,"!=", line, ts,0); goto loop;}
 		attr {write_ts(saved,"=", line, ts,0); goto loop;}
